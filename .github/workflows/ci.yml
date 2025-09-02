@@ -37,7 +37,9 @@ jobs:
       - name: Install current cpanm
         run: cpanm App::cpanminus
       - name: Install dependencies
-        run: cpanm --installdeps .
+        run: |
+          cpanm GitHub::Config::SSH::UserData
+          cpanm --installdeps .
       - name: Show content of log files on Linux
         if: ${{ failure() && startsWith( matrix.runner, 'ubuntu-' )  }}
         run: cat /home/runner/.cpanm/work/*/build.log
