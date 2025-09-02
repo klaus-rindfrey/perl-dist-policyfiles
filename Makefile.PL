@@ -1,4 +1,4 @@
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
@@ -28,7 +28,7 @@ my %WriteMakefileArgs =
    AUTHOR             => q{Klaus Rindfrey <klausrin@cpan.org.eu>},
    VERSION_FROM       => $PM_File,
    ABSTRACT_FROM      => $PM_File,
-   EXE_FILES          => [catfile('script', (split(/::/, $The_Module))[1])],
+   EXE_FILES          => [catfile('script', lc($The_Module =~ s/::/-/rg))],
    LICENSE            => 'perl_5',
    MIN_PERL_VERSION   => '5.010',
    CONFIGURE_REQUIRES => {
@@ -56,7 +56,7 @@ my %WriteMakefileArgs =
                  'File::Basename'        => '0',
                  'File::Spec::Functions' => '0',
 
-                 'GitHub::Config::SSH::UserData'          => '0.03',
+                 'GitHub::Config::SSH::UserData'          => '0.04',
                  'Software::Security::Policy::Individual' => '0.11',
                  'Text::Template'                         => '1.61',
                 },
