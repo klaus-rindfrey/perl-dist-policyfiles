@@ -1,0 +1,152 @@
+#!/usr/bin/env perl
+use 5.014;
+use strict;
+use warnings;
+
+use Pod::Usage;
+
+use Getopt::Long;
+
+use Dist::PolicyFiles;
+
+my @OptDef = qw(login|l=s
+                module|m=s
+
+                contrib_md_src|c=s
+                dir|d=s
+                email|e=s
+                full_name|n=s
+                prefix|p=s
+                sec_md_params|s=s
+                uncapitalize|u
+              );
+my %Opts;
+GetOptions(\%Opts, @OptDef) or pod2usage;
+
+
+my %SecArgs = map {split(/\s*=\s*/, $_, 2)} split(/\s*;\s*/, delete($Opts{sec_md_params}) // "");
+my $Contrib_md_src = delete($Opts{contrib_md_src});
+
+pod2usage(-message => 'Missing module: --module') if !exists($Opts{module});
+pod2usage(-message => 'Missing login name: --login') if !exists($Opts{login}); # pod2usage
+
+
+my $Pf_Obj = Dist::PolicyFiles->new(%Opts);
+$Pf_Obj->create_security_md(%SecArgs);
+$Pf_Obj->create_contrib_md($Contrib_md_src);
+
+
+1;
+
+
+__END__
+
+
+=pod
+
+
+=head1 NAME
+
+dist-policyfiles - Generate CONTRIBUTING.md and SECURITY.md
+
+
+=head1 SYNOPSIS
+
+  dist-policyfiles --module|-m MODULE  --login|-l LOGINNAME
+                  [--dir|-d DIR  --email|-e EMAILADDR  --prefix|-p PREFIX
+                   --uncapitalize|-u
+                   sec_md_params|s PARAMSTR  --contrib_md_src|-c FILENAME]
+
+=head1 DESCRIPTION
+
+=head2 OPTIONS
+
+
+=over
+
+=item B<C<--login>> I<C<LOGINNAME>>
+
+=item B<C<-l>> I<C<LOGINNAME>>
+
+Mandatory.
+
+
+=item B<C<--module>> I<C<MODULENAME>>
+
+=item B<C<-m=s>> I<C<MODULENAME>>
+
+Mandatory.
+
+
+=item B<C<--contrib_md_src>> I<C<FILENAME>>
+
+=item B<C<-c>> I<C<FILENAME>>
+
+Optional.
+
+
+=item B<C<--dir>> I<C<DIRNAME>>
+
+=item B<C<-d>> I<C<DIRNAME>>
+
+Optional.
+
+
+=item B<C<--email>> I<C<EMAILADDRESS>>
+
+=item B<C<-e>> I<C<EMAILADDRESS>>
+
+Optional.
+
+
+=item B<C<--full_name>> I<C<FULLNAME>>
+
+=item B<C<-n>> I<C<FULLNAME>>
+
+Optional.
+
+
+=item B<C<--prefix>> I<C<PREFIX>>
+
+=item B<C<-p>> I<C<PREFIX>>
+
+Optional.
+
+
+=item B<C<--sec_md_params>> I<C<PARAMETERLIST>>
+
+=item B<C<-s>> I<C<PARAMETERLIST>>
+
+Optional.
+
+
+=item B<C<--uncapitalize>>
+
+=item B<C<-u>>
+
+Optional.
+
+=back
+
+
+=head1 SEE ALSO
+
+L<App::ghmulti>,
+L<Dist::PolicyFiles>,
+L<GitHub::Config::SSH::UserData>,
+L<Software::Security::Policy::Individual>
+
+
+=head1 AUTHOR
+
+Klaus Rindfrey, C<< <klausrin at cpan.org.eu> >>
+
+
+=head1 LICENSE AND COPYRIGHT
+
+This software is copyright (c) 2025 by Klaus Rindfrey.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
