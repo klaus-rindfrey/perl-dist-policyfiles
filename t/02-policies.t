@@ -54,7 +54,8 @@ subtest 'Klaus Rindfrey' => sub {
 
   subtest 'script' => sub {
     my $script =  Cwd::abs_path(catfile(dirname(__FILE__), qw(.. script dist-policyfiles)));
-    ok(-x $script, "$script: exists and is executable");
+    local $ENV{HOME} = $Test_Data_Dir;
+    ok(-f $script, "$script: exists");
 
     subtest 'long options' => sub {
       my $dobj = File::Temp->newdir();
@@ -66,7 +67,7 @@ subtest 'Klaus Rindfrey' => sub {
              '--prefix'        => 'perl-',
              '--uncapitalize'  => 1,
              '--sec_md_params' => 'minimum_perl_version=5.14;timeframe=10 days'
-            );
+            ) == 0 or die("system() call failed: $?");
       policies_ok($out_dir, 'klaus-rindfrey');
     };
 
@@ -80,7 +81,7 @@ subtest 'Klaus Rindfrey' => sub {
              '-p' => 'perl-',
              '-u' => 1,
              '-s' => 'minimum_perl_version=5.14;timeframe=10 days'
-            );
+            ) == 0 or die("system() call failed: $?");
       policies_ok($out_dir, 'klaus-rindfrey');
     };
   };
