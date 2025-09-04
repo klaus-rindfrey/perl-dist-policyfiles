@@ -6,10 +6,10 @@ on:
   push:
     branches:
       - main
+      - gh_actions
   pull_request:
     branches:
       - main
-      - gh_actions
   workflow_dispatch:
 
 # https://github.com/shogo82148/actions-setup-perl
