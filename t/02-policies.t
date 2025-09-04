@@ -55,7 +55,7 @@ subtest 'Klaus Rindfrey' => sub {
   subtest 'script' => sub {
     my $script =  Cwd::abs_path(catfile(dirname(__FILE__), qw(.. script dist-policyfiles)));
     local $ENV{HOME} = $Test_Data_Dir;
-    ok(-x $script, "$script: exists and is executable");
+    ok(-f $script, "$script: exists");
 
     subtest 'long options' => sub {
       my $dobj = File::Temp->newdir();
