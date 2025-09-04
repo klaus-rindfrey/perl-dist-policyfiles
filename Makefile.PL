@@ -56,7 +56,7 @@ my %WriteMakefileArgs =
                  'File::Basename'        => '0',
                  'File::Spec::Functions' => '0',
 
-                 'GitHub::Config::SSH::UserData'          => '0.04',
+                 'GitHub::Config::SSH::UserData'          => '0.05',
                  'Software::Security::Policy::Individual' => '0.11',
                  'Text::Template'                         => '1.61',
                 },
