@@ -126,8 +126,8 @@ README.md: $PM_File
 README: $PM_File
 \tpod2text $PM_File > README
 
-all :: README
+all :: manifest README
 
-manifest :: README
+#manifest : README
 ";
 }
