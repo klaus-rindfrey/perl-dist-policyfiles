@@ -1,4 +1,4 @@
-# Just an example temülate
+# Just an example template
 
 Blah blah.
 
@@ -10,3 +10,4 @@ Blah blah blah.
 
 Blah blah blah blah.
 
+full name: John Doe, email: john-doe@mail.org, module: My::Great::Module

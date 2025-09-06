@@ -4,6 +4,8 @@ use 5.014;
 use strict;
 use warnings;
 
+use feature ':5.10';
+
 our $VERSION = '0.01';
 
 
@@ -29,12 +31,20 @@ use GitHub::Config::SSH::UserData qw(get_user_data_from_ssh_cfg);
 sub new {
   my $class = shift;
   my %args = (dir => '.', prefix => q{}, @_);
+  state $allowed = {map {$_ => undef} qw(dir
+                                         email
+                                         full_name
+                                         login
+                                         module
+                                         prefix
+                                         uncapitalize)};
   $args{uncapitalize} = !!$args{uncapitalize};
-  # login module : mandatory
-  # email full_name dir prefix uncapitalize
+  foreach my $arg (keys(%args)) {
+    croak("$arg: unsupported argument") if !exists($allowed->{$arg});
+    croak("$arg: value is not a scalar") if ref($args{$arg});
+  }
   delete @args{ grep { !defined $args{$_} } keys %args };
   do {croak("$_: missing mandatory argument") if !exists($args{$_})} for (qw(login module));
-  do {croak("$_: value is not a scalar") if ref($args{$_})} for keys(%args);
   my $self = bless(\%args, $class);
   if (!(exists($self->{email}) && exists($self->{full_name}))) {
     my $udata = get_user_data_from_ssh_cfg($self->{login});
@@ -47,11 +57,11 @@ sub new {
 }
 
 
-sub module       {$_[0]->{module}}
-sub login        {$_[0]->{login}}
+sub dir          {$_[0]->{dir}}
 sub email        {$_[0]->{email}}
 sub full_name    {$_[0]->{full_name}}
-sub dir          {$_[0]->{dir}}
+sub login        {$_[0]->{login}}
+sub module       {$_[0]->{module}}
 sub prefix       {$_[0]->{prefix}}
 sub uncapitalize {$_[0]->{uncapitalize}}
 
@@ -59,30 +69,13 @@ sub uncapitalize {$_[0]->{uncapitalize}}
 # -----------------------------------
 
 
-sub create_security_md {
-  my $self = shift;
-  my %args = (maintainer => sprintf("%s <%s>", @{$self}{qw(full_name email)}),
-              program    => $self->{module},
-              @_);
-  if (!exists($args{url})) {
-    (my $m = $self->{module}) =~ s/::/-/g;
-    $m = lc($m) if $self->{uncapitalize};
-    $args{url} = "https://github.com/$self->{login}/$self->{prefix}${m}/blob/main/SECURITY.md";
-  }
-  delete @args{ grep { !defined $args{$_} || $args{$_} eq q{}} keys %args };
-  open(my $fh, '>', catfile($self->{dir}, 'SECURITY.md'));
-  print $fh (Software::Security::Policy::Individual->new(\%args)->fulltext);
-  close($fh);
-}
-
-
 sub create_contrib_md {
   my $self = shift;
-  my $contrib_md_src = shift;
+  my $contrib_md_tmpl = shift;
   croak('Unexpected argument(s)') if @_;
   croak('Missing --module: no module specified') unless exists($self->{module});
-  my $contrib_md_tmpl_str = defined($contrib_md_src) ?
-    do { local ( *ARGV, $/ ); @ARGV = ($contrib_md_src); <> }
+  my $contrib_md_tmpl_str = defined($contrib_md_tmpl) ?
+    do { local ( *ARGV, $/ ); @ARGV = ($contrib_md_tmpl); <> }
     :
     <<'EOT';
 # Contributing to This Perl Module
@@ -138,13 +131,32 @@ EOT
   my $tmpl_obj = Text::Template->new(SOURCE => $contrib_md_tmpl_str, TYPE => 'STRING')
     or croak("Couldn't construct template: $Text::Template::ERROR");
 
-  my $contrib = $tmpl_obj->fill_in(HASH => {cpan_rt  => $cpan_rt, github_i => $github_i})
+  my $tmpl_vars = {cpan_rt  => $cpan_rt, github_i => $github_i};
+  @{$tmpl_vars}{qw(email full_name module)} = @{$self}{qw(email full_name module)};
+  my $contrib = $tmpl_obj->fill_in(HASH => $tmpl_vars)
     // croak("Couldn't fill in template: $Text::Template::ERROR");
     open(my $fh, '>', catfile($self->{dir}, 'CONTRIBUTING.md'));
     print $fh ($contrib, "\n");
     close($fh);
 }
 
+
+
+sub create_security_md {
+  my $self = shift;
+  my %args = (maintainer => sprintf("%s <%s>", @{$self}{qw(full_name email)}),
+              program    => $self->{module},
+              @_);
+  if (!exists($args{url})) {
+    (my $m = $self->{module}) =~ s/::/-/g;
+    $m = lc($m) if $self->{uncapitalize};
+    $args{url} = "https://github.com/$self->{login}/$self->{prefix}${m}/blob/main/SECURITY.md";
+  }
+  delete @args{ grep { !defined $args{$_} || $args{$_} eq q{}} keys %args };
+  open(my $fh, '>', catfile($self->{dir}, 'SECURITY.md'));
+  print $fh (Software::Security::Policy::Individual->new(\%args)->fulltext);
+  close($fh);
+}
 
 
 1; # End of Dist::PolicyFiles
@@ -156,7 +168,7 @@ __END__
 
 =head1 NAME
 
-Dist::PolicyFiles - Generate F<CONTRIBUTING.md> and F<SECURITY.md>
+Dist::PolicyFiles - Generate CONTRIBUTING.md and SECURITY.md
 
 =head1 VERSION
 
@@ -164,45 +176,184 @@ Version 0.01
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
     use Dist::PolicyFiles;
 
     my $obj = Dist::PolicyFiles->new(login => $login_name, module => $module);
-    $obj->create_security_md();
     $obj->create_contrib_md();
+    $obj->create_security_md();
 
 =head1 DESCRIPTION
 
+This module is used to generate the policy files F<CONTRIBUTING.md> and F<SECURITY.md>.
+
 =head2 METHODS
+
+=head3 Constructor
+
+The constructor accepts the following arguments, where C<login> and C<module> are mandatory:
 
 =over
 
-=item C<>
+=item
 
-=item C<>
+=item C<dir>
 
-=item C<>
+Optional. 
 
-=item C<>
+=item C<email>
 
-=item C<>
+Optional. 
 
-=item C<>
+=item C<full_name>
 
-=item C<>
+Optional. 
 
-=item C<>
+=item C<login>
 
-=item C<>
+Mandatory.
 
-=item C<>
+=item C<module>
 
-=item C<>
+Mandatory.
 
-=item C<>
+=item C<prefix>
+
+Optional.
+
+=item C<uncapitalize>
+
+Optional.
+ 
+
+=back
+
+
+=head3 Generation of policy files
+
+=over
+
+=item C<create_contrib_md(I<CONTRIB_MD_TMPL>)>
+
+=item C<create_contrib_md()>
+
+Creates F<CONTRIBUTING.md> in directory C<dir> (see corresponding constructor
+argument). Optional argument I<C<CONTRIB_MD_TMPL>> is the name of a template
+file (see L<Text::Template>) for this policy. If this argument is not
+specified, then an internal default template is used.
+
+The template can use the following variables:
+
+=over
+
+=item C<$cpan_rt>
+
+CPAN's request tracker, e.g.:
+
+   https://rt.cpan.org/NoAuth/ReportBug.html?Queue=My-Great-Module
+
+=item C<$email>
+
+User's email address.
+
+=item C<full_name>
+
+User's full name.
+
+=item C<$github_i>
+
+Github issue, e.g.:
+
+   https://github.com/jd/My-Great-Module/issues
+
+=item C<$module>
+
+=back
+
+
+=item C<create_security_md(I<NAMED_ARGUMENTS>)>
+
+Creates F<SECURITY.md> in directory C<dir> (see corresponding constructor
+argument). The arguments accepted by this method are exactly the same as those accepted by the C<new()> method of L<Software::Security::Policy::Individual>.
+
+The named arguments accepted by this method are exactly the same as the ones of the C<new()> method of L<Software::Security::Policy::Individual>.
+
+However, there are the following defaults:
+
+=over
+
+=item C<maintainer:>
+
+User's full name and email address, e.g.:
+
+   John Doe <jd@cpan.org>
+
+=item C<program>
+
+Module name, see constructor argument C<module>.
+
+=item C<url>
+
+   https://github.com/LOGIN/REPO/blob/main/SECURITY.md
+
+where:
+
+=over
+
+=item I<C<LOGIN>>
+
+User's login name, see constructor argument C<login>.
+
+=item I<C<REPO>>
+
+The repo name is constricted as follows:
+
+The repo name begins with the contents of <prefix()>.
+
+=back
+
+
+=back
+
+
+=back
+
+
+=head3 Accessors
+
+
+
+=over
+
+=item C<dir()>
+
+Returns the value passed via the constructor argument C<dir> or the default
+value C<'.'>.
+
+=item C<email()>
+
+Returns the user's email address.
+
+=item C<full_name()>
+
+Returns the user's full name.
+
+=item C<login()>
+
+Returns the value passed via the constructor argument C<login>.
+
+=item C<module()>
+
+Returns the value passed via the constructor argument C<module>.
+
+=item C<prefix()>
+
+Returns the value passed via the constructor argument C<prefix> or the default
+value (empty string).
+
+=item C<uncapitalize()>
+
+Returns the value passed via the constructor argument C<uncapitalize> or the default
+value (I<C<false>>).
 
 =back
 

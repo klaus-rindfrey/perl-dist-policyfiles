@@ -81,6 +81,11 @@ subtest 'error cases' => sub {
          "module: missing mandatory argument");
   };
 
+  subtest 'new: unsupported argument' => sub {
+    like(exception { Dist::PolicyFiles->new(module => 'Foo::Bar', login => 'kr', foo => 0) },
+         qr/\bfoo: unsupported argument\b/,
+         "foo: unsupported argument");
+  };
 
   subtest 'new: value is not a scalar' => sub {
     like(exception { Dist::PolicyFiles->new(module => 'Foo::Bar', login => \ 'klaus-rindfrey') },
