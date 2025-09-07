@@ -14,19 +14,10 @@ use File::Basename;
 use File::Spec::Functions;
 
 use Software::Security::Policy::Individual;
-
-
 use Text::Template;
-
 use GitHub::Config::SSH::UserData qw(get_user_data_from_ssh_cfg);
 
 
-#
-# CONTRIBUTING.md, SECURITY.md
-#
-
-
-###########################################
 
 sub new {
   my $class = shift;
@@ -184,46 +175,62 @@ Version 0.01
 
 =head1 DESCRIPTION
 
-This module is used to generate the policy files F<CONTRIBUTING.md> and F<SECURITY.md>.
+This module is used to generate the policy files F<CONTRIBUTING.md> and
+F<SECURITY.md>. It comes with the L<dist-policyfiles> command line tool.
 
 =head2 METHODS
 
 =head3 Constructor
 
-The constructor accepts the following arguments, where C<login> and C<module> are mandatory:
+The constructor C<new()> accepts the following named arguments, where C<login>
+and C<module> are mandatory:
 
 =over
 
-=item
-
 =item C<dir>
 
-Optional. 
+Optional. Directory where the policy files should be written. By default, this
+is the current working directory. See also accessor of the same name.
 
 =item C<email>
 
-Optional. 
+Optional. User's email address. If not specified, C<new()> tries to read it
+from comments in F<HOME/.ssh/config> (see L<GitHub::Config::SSH::UserData>).
+
+See also the accessor method of the same name.
 
 =item C<full_name>
 
-Optional. 
+Optional. User's full name. If not specified, C<new()> tries to read it from
+comments in F<HOME/.ssh/config> (see L<GitHub::Config::SSH::UserData>).
+
+See also the accessor method of the same name.
 
 =item C<login>
 
-Mandatory.
+Mandatory. User's github login name.
+
+See also the accessor method of the same name.
 
 =item C<module>
 
-Mandatory.
+Mandatory. Module name.
+
+See also the accessor method of the same name.
 
 =item C<prefix>
 
-Optional.
+Optional. Prefix for repo name, see method C<create_security_md()>. Default is
+an empty string.
+
+See also the accessor method of the same name.
 
 =item C<uncapitalize>
 
-Optional.
- 
+Optional. Set this to I<C<true>> if your repo name is lower case, see method
+C<create_security_md()>. Default is I<C<false>>.
+
+See also the accessor method of the same name.
 
 =back
 
@@ -239,7 +246,7 @@ Optional.
 Creates F<CONTRIBUTING.md> in directory C<dir> (see corresponding constructor
 argument). Optional argument I<C<CONTRIB_MD_TMPL>> is the name of a template
 file (see L<Text::Template>) for this policy. If this argument is not
-specified, then an internal default template is used.
+specified, then the internal default template is used.
 
 The template can use the following variables:
 
@@ -255,7 +262,7 @@ CPAN's request tracker, e.g.:
 
 User's email address.
 
-=item C<full_name>
+=item C<$full_name>
 
 User's full name.
 
@@ -264,6 +271,8 @@ User's full name.
 Github issue, e.g.:
 
    https://github.com/jd/My-Great-Module/issues
+
+See method C<create_security_md()> for information on how the repo name is generated.
 
 =item C<$module>
 
@@ -274,8 +283,6 @@ Github issue, e.g.:
 
 Creates F<SECURITY.md> in directory C<dir> (see corresponding constructor
 argument). The arguments accepted by this method are exactly the same as those accepted by the C<new()> method of L<Software::Security::Policy::Individual>.
-
-The named arguments accepted by this method are exactly the same as the ones of the C<new()> method of L<Software::Security::Policy::Individual>.
 
 However, there are the following defaults:
 
@@ -305,22 +312,35 @@ User's login name, see constructor argument C<login>.
 
 =item I<C<REPO>>
 
-The repo name is constricted as follows:
+The repo name is structured as follows:
+
+=over
+
+=item *
 
 The repo name begins with the contents of <prefix()>.
 
+=item *
+
+The rest of the repo name is the module name where the double colons are replaced with hyphens.
+
+=item *
+
+If the constructor argument C<uncapitalise> was I<C<true>>, the latter part of
+the repo name is changed to lower case.
+
 =back
 
+=back
 
 =back
 
+To completely disable one of these arguments, set it to C<undef> or an empty string.
 
 =back
 
 
 =head3 Accessors
-
-
 
 =over
 
@@ -367,6 +387,14 @@ Klaus Rindfrey, C<< <klausrin at cpan.org.eu> >>
 Please report any bugs or feature requests to C<bug-dist-policyfiles at rt.cpan.org>, or through
 the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dist-PolicyFiles>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
+
+
+=head1 SEE ALSO
+
+L<dist-policyfiles>,
+L<GitHub::Config::SSH::UserData>,
+L<Software::Security::Policy::Individual>,
+L<Text::Template>
 
 
 =head1 SUPPORT
