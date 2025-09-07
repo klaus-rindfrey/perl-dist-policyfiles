@@ -207,7 +207,7 @@ To completely disable one of these arguments, set it to an empty string.
 
 =item B<C<-u>>
 
-Optional. Specifiy this option if your repo name is lower case.
+Optional. Specify this option if your repo name is lower case.
 
 =back
 
