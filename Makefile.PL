@@ -121,7 +121,7 @@ WriteMakefile(%WriteMakefileArgs);
 sub MY::postamble {
     return "
 README.md: $PM_File
-\tpod2markdown lib/App/git_log_ch_usrdata.pm > README.md
+\tpod2markdown $PM_File > README.md
 
 README: $PM_File
 \tpod2text $PM_File > README
