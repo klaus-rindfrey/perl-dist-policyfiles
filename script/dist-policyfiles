@@ -19,10 +19,18 @@ my @OptDef = qw(login|l=s
                 prefix|p=s
                 sec_md_params|s=s
                 uncapitalize|u
+
+                help|h
+                version|V
               );
 my %Opts;
 GetOptions(\%Opts, @OptDef) or pod2usage;
 
+pod2usage(-verbose => 2, -exitval => 0) if $Opts{help};
+if ($Opts{version}) {
+  print("dist-policyfiles (Dist::PolicyFiles) $Dist::PolicyFiles::VERSION\n");
+  exit 0;
+}
 
 my %SecArgs = map {split(/\s*=\s*/, $_, 2)} split(/\s*;\s*/, delete($Opts{sec_md_params}) // "");
 my $contrib_md_tmpl = delete($Opts{contrib_md_tmpl});
@@ -132,6 +140,12 @@ F<HOME/.ssh/config> (see L<GitHub::Config::SSH::UserData>).
 Optional. User's full name. If not specified, the script tries to read it from
 comments in F<HOME/.ssh/config> (refer to L<GitHub::Config::SSH::UserData>).
 
+=item B<C<--help>>
+
+=item B<C<-h>>
+
+Print this documentation, ignoring all other given options.
+
 
 =item B<C<--prefix>> I<C<PREFIX>>
 
@@ -208,6 +222,17 @@ To completely disable one of these arguments, set it to an empty string.
 =item B<C<-u>>
 
 Optional. Specify this option if your repo name is lower case.
+
+
+=item B<C<--version>>
+
+=item B<C<-V>>
+
+Print this version information, ignoring all other given options (except for
+B<C<--help>> which has higher priority).
+
+B<Note>: the one-letter abbreviation for this is upper case B<C<-V>>.
+
 
 =back
 

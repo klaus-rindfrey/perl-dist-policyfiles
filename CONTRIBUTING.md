@@ -7,7 +7,7 @@ Thank you for your interest in contributing!
 Please open a
 [CPAN request](https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dist-PolicyFiles)
 or a
-[GitHub Issue](https://github.com/klaus-rindfrey/perl-Dist-PolicyFiles/issues)
+[GitHub Issue](https://github.com/klaus-rindfrey/perl-dist-policyfiles/issues)
 if you encounter a bug or have a suggestion.
 Include the following if possible:
 
@@ -24,7 +24,7 @@ Pull requests are welcome! To contribute code:
 2. Write tests for any new feature or bug fix.
 3. Ensure all tests pass using `prove -l t/` or `make test`.
 4. Follow the existing code style, especially:
-   - No Tabs please
+   - No tabs please
    - No trailing whitespace please
    - 2 spaces indentation
 5. In your pull request, briefly explain your changes and their motivation.
