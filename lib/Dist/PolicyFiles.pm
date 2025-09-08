@@ -6,7 +6,7 @@ use warnings;
 
 use feature ':5.10';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 use Carp;
@@ -16,7 +16,6 @@ use File::Spec::Functions;
 use Software::Security::Policy::Individual;
 use Text::Template;
 use GitHub::Config::SSH::UserData qw(get_user_data_from_ssh_cfg);
-
 
 
 sub new {
@@ -55,9 +54,6 @@ sub login        {$_[0]->{login}}
 sub module       {$_[0]->{module}}
 sub prefix       {$_[0]->{prefix}}
 sub uncapitalize {$_[0]->{uncapitalize}}
-
-
-# -----------------------------------
 
 
 sub create_contrib_md {
@@ -163,7 +159,7 @@ Dist::PolicyFiles - Generate CONTRIBUTING.md and SECURITY.md
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =head1 SYNOPSIS
 
@@ -421,7 +417,6 @@ L<https://metacpan.org/release/Dist-PolicyFiles>
 L<https://github.com/klaus-rindfrey/perl-dist-policyfiles>
 
 =back
-
 
 
 
