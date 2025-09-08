@@ -1,5 +1,9 @@
 Revision history for Dist-PolicyFiles
 
+x.yz    YYYY/MM/DD
+
+      - Added constant INTERNAL_CONTRIB_MD.
+
 0.02    2025/09/07
 
       - Minor code reformatting.
