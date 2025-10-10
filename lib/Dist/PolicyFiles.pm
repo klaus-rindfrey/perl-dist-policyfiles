@@ -290,7 +290,7 @@ However, there are the following defaults:
 
 User's full name and email address, e.g.:
 
-   John Doe <jd@cpan.org>
+   'John Doe <jd@cpan.org>'
 
 =item C<program>
 
@@ -298,7 +298,7 @@ Module name, see constructor argument C<module>.
 
 =item C<url>
 
-   https://github.com/LOGIN/REPO/blob/main/SECURITY.md
+   'https://github.com/LOGIN/REPO/blob/main/SECURITY.md'
 
 where:
 

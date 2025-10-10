@@ -3,6 +3,7 @@ Revision history for Dist-PolicyFiles
 x.yz    YYYY/MM/DD
 
       - Added constant INTERNAL_CONTRIB_MD.
+      - Corrected POD
 
 0.02    2025/09/07
 
