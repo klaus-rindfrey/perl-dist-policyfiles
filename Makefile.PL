@@ -122,7 +122,10 @@ WriteMakefile(%WriteMakefileArgs);
 
 
 sub MY::postamble {
-    return "
+  return "
+clean_all: clean
+\trm -f MANIFEST README
+
 README.md: $PM_File
 \tpod2markdown $PM_File > README.md
 
