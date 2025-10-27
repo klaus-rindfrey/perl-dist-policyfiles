@@ -137,7 +137,7 @@ all :: manifest README
 #manifest : README
 
 policy-files:
-\tdist-policyfiles -m Dist::PolicyFiles -l klaus-rindfrey -p perl- -u \\
+\tdist-policyfiles -m $The_Module -l klaus-rindfrey -p perl- -u \\
         -s 'timeframe=10 days;perl_support_years=10'
 ";
 }
