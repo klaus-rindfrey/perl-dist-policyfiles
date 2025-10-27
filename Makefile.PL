@@ -113,10 +113,11 @@ delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
   unless eval { ExtUtils::MakeMaker->VERSION('6.52'); 1 };
 delete $WriteMakefileArgs{MIN_PERL_VERSION}
   unless eval { ExtUtils::MakeMaker->VERSION('6.48'); 1 };
-delete $WriteMakefileArgs{META_MERGE}
-  unless eval { ExtUtils::MakeMaker->VERSION('6.46'); 1 };
-delete $WriteMakefileArgs{LICENSE}
-  unless eval { ExtUtils::MakeMaker->VERSION('6.31'); 1 };
+# Not needed becaus we have minimum perl 5.14
+# delete $WriteMakefileArgs{META_MERGE}
+#   unless eval { ExtUtils::MakeMaker->VERSION('6.46'); 1 };
+# delete $WriteMakefileArgs{LICENSE}
+#   unless eval { ExtUtils::MakeMaker->VERSION('6.31'); 1 };
 
 WriteMakefile(%WriteMakefileArgs);
 
@@ -132,7 +133,7 @@ README.md: $PM_File
 README: $PM_File
 \tpod2text $PM_File > README
 
-all :: manifest README
+all :: manifest README README.md
 
 #manifest : README
 
