@@ -64,7 +64,7 @@ dist-policyfiles - Generate CONTRIBUTING.md and SECURITY.md
                   [--dir|-d DIR
                   --email|-e EMAILADDR  --full_name FULL_NAME
                   --prefix|-p PREFIX  --uncapitalize|-u
-                   sec_md_params|s PARAMSTR  --contrib_md_tmpl|-c FILENAME]
+                  --sec_md_params|-s PARAMSTR  --contrib_md_tmpl|-c FILENAME]
 
 =head1 DESCRIPTION
 
