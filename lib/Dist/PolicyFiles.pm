@@ -6,7 +6,7 @@ use warnings;
 
 use feature ':5.10';
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 
 use Carp;
@@ -160,7 +160,7 @@ Dist::PolicyFiles - Generate CONTRIBUTING.md and SECURITY.md
 
 =head1 VERSION
 
-Version 0.04
+Version 0.05
 
 =head1 SYNOPSIS
 
