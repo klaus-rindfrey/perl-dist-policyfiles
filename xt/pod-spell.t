@@ -8,7 +8,8 @@ use Pod::Wordlist;
 $ENV{LANG} = 'en_US';
 
 add_stopwords(<DATA>);
-all_pod_files_spelling_ok( qw( script ) );
+set_pod_file_filter(sub { return $_[0] !~ /~$/; });
+all_pod_files_spelling_ok( qw(lib script ) );
 
 
 __DATA__

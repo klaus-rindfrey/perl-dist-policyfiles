@@ -51,7 +51,7 @@ my %prereq_build = (
                     'autodie'               => '0',
                     'strict'                => '0',
                     'warnings'              => '0',
-                    'ExtUtils::MakeMaker'   => '0',
+                    'ExtUtils::MakeMaker'   => '6.57_05',
                     'File::Spec::Functions' => '0',
                    );
 
@@ -122,10 +122,10 @@ unless (eval { ExtUtils::MakeMaker->VERSION('6.64'); 1 }) {
   @{$WriteMakefileArgs{PREREQ_PM}}{keys %$test_requires} = values %$test_requires;
 }
 
-unless (eval { ExtUtils::MakeMaker->VERSION('6.55_03'); 1 }) {
-  my $build_requires = delete $WriteMakefileArgs{BUILD_REQUIRES} || {};
-  @{$WriteMakefileArgs{PREREQ_PM}}{keys %$build_requires} = values %$build_requires;
-}
+# unless (eval { ExtUtils::MakeMaker->VERSION('6.55_03'); 1 }) {
+#   my $build_requires = delete $WriteMakefileArgs{BUILD_REQUIRES} || {};
+#   @{$WriteMakefileArgs{PREREQ_PM}}{keys %$build_requires} = values %$build_requires;
+# }
 
 
 # delete $WriteMakefileArgs{CONFIGURE_REQUIRES}

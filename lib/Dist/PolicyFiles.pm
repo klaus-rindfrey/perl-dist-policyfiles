@@ -6,7 +6,7 @@ use warnings;
 
 use feature ':5.10';
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 
 use Carp;
@@ -160,7 +160,7 @@ Dist::PolicyFiles - Generate CONTRIBUTING.md and SECURITY.md
 
 =head1 VERSION
 
-Version 0.05
+Version 0.06
 
 =head1 SYNOPSIS
 
@@ -377,7 +377,7 @@ value (I<C<false>>).
 
 =head2 CONSTANTS
 
-Constant I<C<INTERNAL_CONTRIB_MD>> containes the internal template used to
+Constant I<C<INTERNAL_CONTRIB_MD>> contains the internal template used to
 create F<CONTRIBUTING.md>. The constant is not exported. If necessary, access
 it as follows: C<Dist::PolicyFiles::INTERNAL_CONTRIB_MD>.
 
