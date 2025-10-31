@@ -11,8 +11,8 @@
 ^pm_to_blib$
 
 # Module specific files
-\bDist::PolicyFiles-\d+(?:\.\d+)+\/
-^Dist::PolicyFiles-\d+(?:\.\d+)+\.tar\.gz$
+\bDist-PolicyFiles-\d+(?:\.\d+)+\/
+^Dist-PolicyFiles-\d+(?:\.\d+)+\.tar\.gz$
 
 
 # Temp, old and emacs backup files.
