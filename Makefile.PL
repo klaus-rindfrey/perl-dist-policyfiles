@@ -69,8 +69,8 @@ my %authortest_requires = (
                            'Test::Spelling'        => '0.25',
                           );
 
-if ($ENV{TEST_AUTHOR}) {
-  print "Author tests enabled (TEST_AUTHOR=1)\n";
+if ($ENV{AUTHOR_TESTING}) {
+  print "Author tests enabled (AUTHOR_TESTING=1)\n";
   %test_requires = (%test_requires,  %authortest_requires);
 }
 
