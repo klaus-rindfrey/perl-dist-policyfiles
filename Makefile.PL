@@ -55,24 +55,29 @@ my %prereq_build = (
                     'File::Spec::Functions' => '0',
                    );
 
-my %authortest_requires = (
-                           'Capture::Tiny'         => '0.47',
-                           'Cwd'                   => '0',
-                           'File::Basename'        => '0',
-                           'File::Spec::Functions' => '0',
-                           'File::Temp'            => '0',
-                           'File::chdir'           => '0.1011',
-                           'Pod::Wordlist'         => '1.27',
-                           'Test::CheckManifest'   => '1.43',
-                           'Test::More'            => '0',
-                           'Test::Pod'             => '1.51',
-                           'Test::Spelling'        => '0.25',
-                          );
 
 if ($ENV{AUTHOR_TESTING}) {
-  print "Author tests enabled (AUTHOR_TESTING=1)\n";
-  %test_requires = (%test_requires,  %authortest_requires);
+  print "Author tests enabled (AUTHOR_TESTING is true)\n";
+  add_mods(\%test_requires, {
+                             'Pod::Wordlist'  => '1.27',
+                             'Test::Kwalitee' => '1.26',
+                             'Test::Pod'      => '1.22',
+                             'Test::Spelling' => '0.25',
+                            }
+          );
 }
+
+if ($ENV{RELEASE_TESTING}) {
+  print "Release tests enabled (RELEASE_TESTING is TRUE)\n";
+  add_mods(\%test_requires, {
+                             'Test::Changes::Strict::Simple' => '0.05',
+                             'Test::CheckManifest'           => '1.43',
+                             'Test::CPAN::Meta'              => '0.25',
+                             'Test::CPAN::Meta::JSON'        => '0.16',
+                            }
+          );
+}
+
 
 my %WriteMakefileArgs =
   (
@@ -124,6 +129,17 @@ unless (eval { ExtUtils::MakeMaker->VERSION('6.64'); 1 }) {
 }
 
 WriteMakefile(%WriteMakefileArgs);
+
+
+#--------------------------------------------------------------------------------------------------
+
+sub add_mods {
+  my ($a, $b) = @_;
+  while (my ($mod, $ver) = each(%$b)) {
+    warn("Different versions for $mod") if exists($a->{$mod}) && $a->{$mod} ne $ver;
+    $a->{$mod} = $ver if !exists($a->{$mod}) || version->parse($a->{$mod}) < version->parse($ver);
+  }
+}
 
 
 sub MY::postamble {
