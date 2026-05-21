@@ -189,9 +189,13 @@ Version 0.08
 This module is used to generate the policy files F<CONTRIBUTING.md> and
 F<SECURITY.md>. It comes with the L<dist-policyfiles> command line tool.
 
-=head2 METHODS
+=head2 Methods
 
-=head3 C<new(I<NAMED_ARGUMENTS>)>
+=head3 Constructor
+
+=over
+
+=item C<new(I<NAMED_ARGUMENTS>)>
 
 The constructor C<new()> accepts the following named arguments, where C<login>
 and C<module> are mandatory:
@@ -245,26 +249,9 @@ See also the accessor method of the same name.
 
 =back
 
-=head3 C<cpan_rt_url()>
+=back
 
-Returns the CPAN's request tracker URL, e.g.:
-
-   "https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dist-PolicyFiles"
-
-=head3 C<repo_name()>
-
-Returns the github repo name, e.g.:
-
-   "perl-dist-policyfiles"
-
-=head3 C<github_url()>
-
-Returns the github repo URL, e.g.:
-
-   "https://github.com/klaus-rindfrey/perl-dist-policyfiles"
-
-
-=head3 Generation of policy files
+=head2 Generation of policy files
 
 =over
 
@@ -370,9 +357,15 @@ To completely disable one of these arguments, set it to C<undef> or an empty str
 =back
 
 
-=head3 Accessors
+=head3 Other Methods
 
 =over
+
+=item C<cpan_rt_url()>
+
+Returns the CPAN's request tracker URL, e.g.:
+
+   "https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dist-PolicyFiles"
 
 =item C<dir()>
 
@@ -387,6 +380,12 @@ Returns the user's email address.
 
 Returns the user's full name.
 
+=item C<github_url()>
+
+Returns the github repo URL, e.g.:
+
+   "https://github.com/klaus-rindfrey/perl-dist-policyfiles"
+
 =item C<login()>
 
 Returns the value passed via the constructor argument C<login>.
@@ -399,6 +398,12 @@ Returns the value passed via the constructor argument C<module>.
 
 Returns the value passed via the constructor argument C<prefix> or the default
 value (empty string).
+
+=item C<repo_name()>
+
+Returns the github repo name, e.g.:
+
+   "perl-dist-policyfiles"
 
 =item C<uncapitalize()>
 
