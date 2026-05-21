@@ -191,7 +191,7 @@ F<SECURITY.md>. It comes with the L<dist-policyfiles> command line tool.
 
 =head2 METHODS
 
-=head3 C<new(I<NAMED_ARGUMENTS>)
+=head3 C<new(I<NAMED_ARGUMENTS>)>
 
 The constructor C<new()> accepts the following named arguments, where C<login>
 and C<module> are mandatory:
